@@ -12,12 +12,12 @@
     ],
     "routes": [
       {
-        "source": "/api/(.*)",
-        "destination": "/server/index.ts"
+        "src": "/api/(.*)",
+        "dest": "/server/index.ts"
       },
       {
-        "source": "/(.*)",
-        "destination": "/dist/index.html"
+        "src": "/(.*)",
+        "dest": "/dist/index.html"
       }
     ]
   }
