@@ -2,12 +2,7 @@
   "functions": {
     "api/index.ts": {
       "maxDuration": 30,
-      "includeFiles": [
-        "server/**",
-        "shared/**",
-        "package.json",
-        "tsconfig.json"
-      ]
+      "includeFiles": "server/** shared/** package.json tsconfig.json"
     }
   },
   "rewrites": [
