@@ -10,7 +10,7 @@
         "use": "@vercel/node"
       },
       {
-        "src": "server/vite.ts",
+        "src": "dist/public/**",
         "use": "@vercel/static"
       }
     ],
