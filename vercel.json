@@ -19,5 +19,8 @@
         "src": "/(.*)",
         "dest": "/dist/public/index.html"
       }
-    ]
+    ],
+    "buildCommand": "npm run build",
+    "installCommand": "npm ci --include=dev",
+    "outputDirectory": "dist/public"
   }
