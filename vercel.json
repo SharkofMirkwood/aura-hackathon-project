@@ -1,14 +1,5 @@
 {
-  "version": 2,
   "builds": [
-    {
-      "src": "server/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["server/**", "shared/**", "package.json", "tsconfig.json"],
-        "maxDuration": 30
-      }
-    },
     {
       "src": "package.json",
       "use": "@vercel/static-build",
@@ -17,14 +8,19 @@
       }
     }
   ],
-  "routes": [
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server/index.ts"
+      "source": "/api/(.*)",
+      "destination": "/api/index.ts"
     },
     {
-      "src": "/(.*)",
-      "dest": "/dist/public/index.html"
+      "source": "/(.*)",
+      "destination": "/dist/public/index.html"
     }
   ]
 }
