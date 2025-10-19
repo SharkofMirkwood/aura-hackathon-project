@@ -8,12 +8,23 @@
         "includeFiles": ["server/**", "shared/**"],
         "maxDuration": 30
       }
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "client/dist"
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/server/index.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/dist/index.html"
     }
   ]
 }
