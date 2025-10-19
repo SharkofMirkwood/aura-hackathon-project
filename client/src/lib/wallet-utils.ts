@@ -31,8 +31,6 @@ export function getOrCreateBuiltInWallet(): {
     balance: "0",
     isConnected: false,
     isBuiltIn: true,
-    userId: null,
-    createdAt: new Date(),
   };
 
   return { wallet, privateKey };
