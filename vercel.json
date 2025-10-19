@@ -8,10 +8,7 @@
     {
       "source": "/api/(.*)",
       "destination": "/api/index.ts"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/dist/index.html"
     }
-  ]
+  ],
+  "outputDirectory": "dist"
 }
