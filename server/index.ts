@@ -58,21 +58,27 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
   });
 
-  if (process.env.NODE_ENV === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
-
-  const port = parseInt(process.env.PORT || "5000", 10);
-  server.listen(
-    {
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-    },
-    () => {
-      log(`serving on port ${port}`);
+  // Only run server in development or when not in Vercel
+  if (process.env.NODE_ENV === "development" || !process.env.VERCEL) {
+    if (process.env.NODE_ENV === "development") {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
     }
-  );
+
+    const port = parseInt(process.env.PORT || "5000", 10);
+    server.listen(
+      {
+        port,
+        host: "0.0.0.0",
+        reusePort: true,
+      },
+      () => {
+        log(`serving on port ${port}`);
+      }
+    );
+  }
 })();
+
+// Export for Vercel serverless functions
+export default app;
