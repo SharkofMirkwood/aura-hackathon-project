@@ -3,13 +3,7 @@
     "buildCommand": "npm run build",
     "installCommand": "npm ci --include=dev",
     "outputDirectory": "dist/public",
-    "builds": [
-      {
-        "src": "server/index.ts",
-        "use": "@vercel/node",
-        "buildCommand": "npm run build"
-      }
-    ],
+
     "routes": [
       {
         "src": "/api/(.*)",
