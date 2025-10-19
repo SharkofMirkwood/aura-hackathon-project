@@ -10,5 +10,11 @@
       "destination": "/api/index.ts"
     }
   ],
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "includeFiles": [
+    "server/**",
+    "shared/**",
+    "package.json",
+    "tsconfig.json"
+  ]
 }
