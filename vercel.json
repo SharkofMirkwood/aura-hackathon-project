@@ -4,6 +4,16 @@
     "installCommand": "npm ci --include=dev",
     "outputDirectory": "dist/public",
 
+    "builds": [
+      {
+        "src": "server/index.ts",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "server/vite.ts",
+        "use": "@vercel/static"
+      }
+    ],
     "routes": [
       {
         "src": "/api/(.*)",
