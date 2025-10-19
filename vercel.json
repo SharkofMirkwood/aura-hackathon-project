@@ -16,6 +16,5 @@
       "destination": "/api/index.ts"
     }
   ],
-  "outputDirectory": "dist",
-
+  "outputDirectory": "dist"
 }
