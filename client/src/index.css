@@ -1,0 +1,200 @@
+@import 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(215, 30%, 6%);
+  --foreground: hsl(210, 20%, 98%);
+  --card: hsl(215, 25%, 11%);
+  --card-foreground: hsl(210, 20%, 98%);
+  --popover: hsl(215, 25%, 11%);
+  --popover-foreground: hsl(210, 20%, 98%);
+  --primary: hsl(243, 75%, 66%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(158, 64%, 52%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(215, 20%, 16%);
+  --muted-foreground: hsl(215, 10%, 62%);
+  --accent: hsl(199, 89%, 48%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --warning: hsl(38, 92%, 50%);
+  --warning-foreground: hsl(0, 0%, 100%);
+  --border: hsl(215, 20%, 20%);
+  --input: hsl(215, 20%, 20%);
+  --ring: hsl(243, 75%, 66%);
+  --chart-1: hsl(243, 75%, 66%);
+  --chart-2: hsl(158, 64%, 52%);
+  --chart-3: hsl(38, 92%, 50%);
+  --chart-4: hsl(147, 78%, 42%);
+  --chart-5: hsl(341, 75%, 51%);
+  --sidebar: hsl(215, 25%, 11%);
+  --sidebar-foreground: hsl(210, 20%, 98%);
+  --sidebar-primary: hsl(243, 75%, 66%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(199, 89%, 48%);
+  --sidebar-accent-foreground: hsl(0, 0%, 100%);
+  --sidebar-border: hsl(215, 20%, 20%);
+  --sidebar-ring: hsl(243, 75%, 66%);
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  .message-animation {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .typing-indicator span {
+    animation: blink 1.4s infinite both;
+  }
+
+  .typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes blink {
+    0%, 60%, 100% {
+      opacity: 0.3;
+    }
+    30% {
+      opacity: 1;
+    }
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+  }
+
+  .wallet-card:hover {
+    background: hsl(215, 25%, 13%);
+    border-color: hsl(243, 75%, 66%);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: hsl(215, 25%, 11%);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(215, 20%, 25%);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(215, 20%, 30%);
+  }
+
+  .payment-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .function-badge {
+    background: linear-gradient(135deg, hsl(243, 75%, 66%) 0%, hsl(217, 91%, 60%) 100%);
+  }
+
+  .strategy-card {
+    background: linear-gradient(135deg, hsl(215, 25%, 11%) 0%, hsl(215, 25%, 13%) 100%);
+    border: 1px solid hsl(215, 20%, 20%);
+  }
+
+  .strategy-card:hover {
+    border-color: hsl(158, 64%, 52%);
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+  }
+
+  .connected-indicator {
+    position: relative;
+  }
+
+  .connected-indicator::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: hsl(158, 64%, 52%);
+    border-radius: 50%;
+    top: 50%;
+    left: -16px;
+    transform: translateY(-50%);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 hsla(158, 64%, 52%, 0.7);
+    }
+    50% {
+      opacity: 0.8;
+      box-shadow: 0 0 0 6px hsla(158, 64%, 52%, 0);
+    }
+  }
+
+  .modal-backdrop {
+    backdrop-filter: blur(4px);
+    background: rgba(10, 14, 20, 0.8);
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, 
+      hsl(215, 25%, 11%) 0%, 
+      hsl(215, 25%, 15%) 50%, 
+      hsl(215, 25%, 11%) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+}
