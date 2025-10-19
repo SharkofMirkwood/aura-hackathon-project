@@ -51,10 +51,7 @@ export async function createChatCompletion(
 Available wallet context: ${
         selectedWallets.length > 0
           ? selectedWallets
-              .map(
-                (w) =>
-                  `${w.name} (${w.address}) - ${w.network} - Balance: $${w.balance}`
-              )
+              .map((w) => `${w.name} (${w.address}) - Balance: $${w.balance}`)
               .join(", ")
           : "No wallets selected"
       }

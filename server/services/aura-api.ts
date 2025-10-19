@@ -17,7 +17,12 @@ export async function fetchStrategies(addresses: string[]): Promise<any> {
         const response = await axios.get(
           `${AURA_API_BASE}/api/portfolio/strategies`,
           {
-            params: { address },
+            params: {
+              address,
+              ...(process.env.AURA_API_KEY
+                ? { apiKey: process.env.AURA_API_KEY }
+                : {}),
+            },
             headers: {
               "Content-Type": "application/json",
             },
