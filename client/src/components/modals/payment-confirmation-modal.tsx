@@ -4,6 +4,7 @@ import { X, Wallet2, ChevronRight, Loader2 } from "lucide-react";
 import { createPublicClient, http, formatUnits } from "viem";
 import { base } from "viem/chains";
 import type { Wallet } from "@shared/schema";
+import { TokenUSDC, NetworkBase } from "@web3icons/react";
 
 interface PaymentConfirmationModalProps {
   amount: number;
@@ -48,23 +49,23 @@ export default function PaymentConfirmationModal({
       try {
         // Fetch connected wallet balance
         if (connectedWallet) {
-          const balance = await publicClient.readContract({
+          const balance = (await publicClient.readContract({
             address: USDC_ADDRESS,
             abi: USDC_ABI,
             functionName: "balanceOf",
             args: [connectedWallet.address as `0x${string}`],
-          }) as bigint;
+          })) as bigint;
           setConnectedBalance(parseFloat(formatUnits(balance, 6)));
         }
 
         // Fetch built-in wallet balance
         if (builtInWallet) {
-          const balance = await publicClient.readContract({
+          const balance = (await publicClient.readContract({
             address: USDC_ADDRESS,
             abi: USDC_ABI,
             functionName: "balanceOf",
             args: [builtInWallet.address as `0x${string}`],
-          }) as bigint;
+          })) as bigint;
           setBuiltInBalance(parseFloat(formatUnits(balance, 6)));
         }
       } catch (error) {
@@ -77,8 +78,10 @@ export default function PaymentConfirmationModal({
     fetchBalances();
   }, [connectedWallet, builtInWallet]);
 
-  const connectedHasSufficient = connectedBalance !== null && connectedBalance >= amount;
-  const builtInHasSufficient = builtInBalance !== null && builtInBalance >= amount;
+  const connectedHasSufficient =
+    connectedBalance !== null && connectedBalance >= amount;
+  const builtInHasSufficient =
+    builtInBalance !== null && builtInBalance >= amount;
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -112,15 +115,29 @@ export default function PaymentConfirmationModal({
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-sm">Amount</span>
-              <span className="font-bold text-2xl text-foreground" data-testid="payment-amount">
-                ${amount.toFixed(2)}
-              </span>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <TokenUSDC size={24} />
+                  <span
+                    className="font-bold text-2xl text-foreground leading-none"
+                    data-testid="payment-amount"
+                  >
+                    ${amount.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <NetworkBase size={14} />
+                  <span className="leading-none">on Base</span>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Wallet Options */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground">Select Payment Method</h3>
+            <h3 className="text-sm font-semibold text-muted-foreground">
+              Select Payment Method
+            </h3>
 
             {/* Connected Wallet Option */}
             {connectedWallet && (
@@ -140,9 +157,14 @@ export default function PaymentConfirmationModal({
                       <Wallet2 className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <div className="font-semibold text-sm">{connectedWallet.name}</div>
+                      <div className="font-semibold text-sm">
+                        {connectedWallet.name}
+                      </div>
                       <div className="text-xs text-muted-foreground font-mono">
-                        {`${connectedWallet.address.slice(0, 6)}...${connectedWallet.address.slice(-4)}`}
+                        {`${connectedWallet.address.slice(
+                          0,
+                          6
+                        )}...${connectedWallet.address.slice(-4)}`}
                       </div>
                     </div>
                   </div>
@@ -150,7 +172,13 @@ export default function PaymentConfirmationModal({
                     <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
                   ) : (
                     <div className="text-right">
-                      <div className={`font-bold ${connectedHasSufficient ? 'text-foreground' : 'text-destructive'}`}>
+                      <div
+                        className={`font-bold ${
+                          connectedHasSufficient
+                            ? "text-foreground"
+                            : "text-destructive"
+                        }`}
+                      >
                         {connectedBalance?.toFixed(2)} USDC
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -187,7 +215,10 @@ export default function PaymentConfirmationModal({
                         </span>
                       </div>
                       <div className="text-xs text-muted-foreground font-mono">
-                        {`${builtInWallet.address.slice(0, 6)}...${builtInWallet.address.slice(-4)}`}
+                        {`${builtInWallet.address.slice(
+                          0,
+                          6
+                        )}...${builtInWallet.address.slice(-4)}`}
                       </div>
                     </div>
                   </div>
@@ -195,7 +226,13 @@ export default function PaymentConfirmationModal({
                     <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
                   ) : (
                     <div className="text-right">
-                      <div className={`font-bold ${builtInHasSufficient ? 'text-foreground' : 'text-destructive'}`}>
+                      <div
+                        className={`font-bold ${
+                          builtInHasSufficient
+                            ? "text-foreground"
+                            : "text-destructive"
+                        }`}
+                      >
                         {builtInBalance?.toFixed(2)} USDC
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -212,7 +249,8 @@ export default function PaymentConfirmationModal({
           {!isLoading && !connectedHasSufficient && !builtInHasSufficient && (
             <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4">
               <p className="text-sm text-destructive">
-                Insufficient USDC balance in all wallets. Please top up to continue.
+                Insufficient USDC balance in all wallets. Please top up to
+                continue.
               </p>
             </div>
           )}

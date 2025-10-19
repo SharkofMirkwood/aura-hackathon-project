@@ -16,9 +16,9 @@ export default function StrategiesModal({
       <div className="bg-background border border-border rounded-xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div>
-            <h2 className="text-2xl font-bold">Aura Network DeFi Analysis</h2>
+            <h2 className="text-2xl font-bold">AURA DeFi Analysis</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              1 wallet analyzed via Aura Network
+              1 wallet analyzed via AURA
             </p>
           </div>
           <Button
@@ -237,9 +237,7 @@ export default function StrategiesModal({
 
         <div className="p-6 border-t border-border">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs text-muted-foreground">
-              Powered by Aura Network
-            </p>
+            <p className="text-xs text-muted-foreground">Powered by AURA</p>
           </div>
           <Button
             onClick={onClose}

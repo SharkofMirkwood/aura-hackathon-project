@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { X, Plus, Info } from "lucide-react";
 import { useWallet } from "@/hooks/use-wallet";
@@ -15,7 +14,6 @@ interface AddWalletModalProps {
 export default function AddWalletModal({ onClose }: AddWalletModalProps) {
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
-  const [network, setNetwork] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { addWallet } = useWallet();
@@ -27,11 +25,11 @@ export default function AddWalletModal({ onClose }: AddWalletModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!address || !network) {
+
+    if (!address) {
       toast({
         title: "Validation Error",
-        description: "Please fill in all required fields",
+        description: "Please enter a wallet address",
         variant: "destructive",
       });
       return;
@@ -51,16 +49,16 @@ export default function AddWalletModal({ onClose }: AddWalletModalProps) {
       await addWallet({
         address,
         name: name || `Wallet ${address.slice(0, 6)}...${address.slice(-4)}`,
-        network,
-        balance: null,
+        balance: undefined,
         isConnected: false,
+        isBuiltIn: false,
       });
 
       toast({
         title: "Wallet Added",
         description: "Wallet has been successfully added to your list",
       });
-      
+
       onClose();
     } catch (error) {
       toast({
@@ -83,8 +81,15 @@ export default function AddWalletModal({ onClose }: AddWalletModalProps) {
               <Plus className="w-6 h-6 text-warning" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold" data-testid="add-wallet-title">Add Wallet</h3>
-              <p className="text-xs text-muted-foreground">Add EVM wallet to context</p>
+              <h3
+                className="text-lg font-semibold"
+                data-testid="add-wallet-title"
+              >
+                Add Wallet
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Add EVM wallet to context
+              </p>
             </div>
           </div>
           <Button
@@ -101,7 +106,10 @@ export default function AddWalletModal({ onClose }: AddWalletModalProps) {
         {/* Modal Content */}
         <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
           <div>
-            <Label htmlFor="address" className="block text-sm font-medium text-foreground mb-2">
+            <Label
+              htmlFor="address"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
               Wallet Address *
             </Label>
             <Input
@@ -116,7 +124,10 @@ export default function AddWalletModal({ onClose }: AddWalletModalProps) {
           </div>
 
           <div>
-            <Label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+            <Label
+              htmlFor="name"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
               Wallet Name (Optional)
             </Label>
             <Input
@@ -130,28 +141,11 @@ export default function AddWalletModal({ onClose }: AddWalletModalProps) {
             />
           </div>
 
-          <div>
-            <Label htmlFor="network" className="block text-sm font-medium text-foreground mb-2">
-              Network *
-            </Label>
-            <Select value={network} onValueChange={setNetwork}>
-              <SelectTrigger className="w-full bg-muted border-input" data-testid="network-select">
-                <SelectValue placeholder="Select network" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ethereum">Ethereum</SelectItem>
-                <SelectItem value="polygon">Polygon</SelectItem>
-                <SelectItem value="arbitrum">Arbitrum</SelectItem>
-                <SelectItem value="optimism">Optimism</SelectItem>
-                <SelectItem value="base">Base</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="flex items-center gap-2 p-3 bg-accent/10 border border-accent/20 rounded-lg">
             <Info className="w-5 h-5 text-accent flex-shrink-0" />
             <p className="text-xs text-muted-foreground">
-              Wallets are stored locally in your browser and included in chat context when selected.
+              Wallets are stored locally in your browser and included in chat
+              context when selected.
             </p>
           </div>
         </form>
@@ -168,7 +162,7 @@ export default function AddWalletModal({ onClose }: AddWalletModalProps) {
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={isLoading || !address || !network}
+            disabled={isLoading || !address}
             className="flex-1 bg-warning hover:bg-warning/90 text-white"
             data-testid="add-wallet-confirm"
           >

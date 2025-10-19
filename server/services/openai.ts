@@ -22,7 +22,7 @@ const AVAILABLE_TOOLS: OpenAI.Chat.ChatCompletionTool[] = [
     type: "function",
     function: {
       name: "get_strategies",
-      description: `Get DeFi strategy recommendations for a single wallet address from Aura Network API. Costs $${API_COSTS.STRATEGIES.COST_PER_ADDRESS} per address. IMPORTANT: Only one wallet address can be analyzed at a time.`,
+      description: `Get DeFi strategy recommendations for a single wallet address from the AURA API. Costs $${API_COSTS.STRATEGIES.COST_PER_ADDRESS} per address. IMPORTANT: Only one wallet address can be analyzed at a time.`,
       parameters: {
         type: "object",
         properties: {
@@ -46,7 +46,7 @@ export async function createChatCompletion(
   const formattedMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
     {
       role: "system",
-      content: `You are HeyAura, a DeFi AI assistant that helps users explore decentralized finance opportunities. You have access to real-time DeFi strategy recommendations through the Aura Network API.
+      content: `You are HeyAura, a DeFi AI assistant that helps users explore decentralized finance opportunities. You have access to real-time DeFi strategy recommendations through the AURA API.
 
 Available wallet context: ${
         selectedWallets.length > 0

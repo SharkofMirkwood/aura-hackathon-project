@@ -41,7 +41,7 @@ export default function StrategiesOverview({ data }: StrategiesOverviewProps) {
             </h4>
             <p className="text-xs text-muted-foreground">
               {totalStrategies} strategies found across {data.strategies.length}{" "}
-              wallet{data.strategies.length !== 1 ? "s" : ""} via Aura Network
+              wallet{data.strategies.length !== 1 ? "s" : ""} via AURA
             </p>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function StrategiesOverview({ data }: StrategiesOverviewProps) {
         {allTokens.length > 0 && (
           <div className="bg-background/50 rounded-md p-3 space-y-2">
             <p className="text-xs text-muted-foreground font-medium">
-              Top Holdings (via Aura):
+              Top Holdings (via AURA):
             </p>
             <div className="space-y-1.5">
               {allTokens.map((token: any, idx: number) => (
