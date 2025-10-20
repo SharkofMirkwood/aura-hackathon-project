@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import ChatArea from "@/components/chat/chat-area";
 import WalletSidebar from "@/components/wallet/wallet-sidebar";
 import AddWalletModal from "@/components/modals/add-wallet-modal";
+import WelcomeModal from "@/components/modals/welcome-modal";
 import { useWallet } from "@/hooks/use-wallet";
 import { useChat } from "@/hooks/use-chat";
+import { useWelcome } from "@/hooks/use-welcome";
 import { Button } from "@/components/ui/button";
 import { Wallet2, X } from "lucide-react";
 
@@ -21,6 +23,7 @@ export default function Home() {
   } = useWallet();
   const { messages, isTyping, sendMessage, clearChat, currentChatId } =
     useChat();
+  const { showWelcome, closeWelcome, openWelcome } = useWelcome();
 
   return (
     <div className="flex h-[100dvh] bg-background relative">
@@ -35,6 +38,7 @@ export default function Home() {
         }
         onShowAddWallet={() => setShowAddWalletModal(true)}
         onConnectWallet={connectWallet}
+        onShowWelcome={openWelcome}
         data-testid="chat-area"
       />
 
@@ -90,6 +94,10 @@ export default function Home() {
           onClose={() => setShowAddWalletModal(false)}
           data-testid="add-wallet-modal"
         />
+      )}
+
+      {showWelcome && (
+        <WelcomeModal onClose={closeWelcome} data-testid="welcome-modal" />
       )}
     </div>
   );

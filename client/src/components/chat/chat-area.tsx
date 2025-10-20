@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Message from "./message";
 import TypingIndicator from "./typing-indicator";
-import { Zap, Send, Wallet2, MoreVertical, Trash2 } from "lucide-react";
+import { Zap, Send, Wallet2, MoreVertical, Trash2, Info } from "lucide-react";
 import type { Message as MessageType } from "@shared/schema";
 
 interface ChatAreaProps {
@@ -21,6 +21,7 @@ interface ChatAreaProps {
   hasWallets: boolean | undefined;
   onShowAddWallet: () => void;
   onConnectWallet?: () => void;
+  onShowWelcome?: () => void;
 }
 
 export default function ChatArea({
@@ -32,6 +33,7 @@ export default function ChatArea({
   hasWallets,
   onShowAddWallet,
   onConnectWallet,
+  onShowWelcome,
 }: ChatAreaProps) {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -100,6 +102,14 @@ export default function ChatArea({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" data-testid="menu-chat-options">
+              <DropdownMenuItem
+                onClick={onShowWelcome}
+                className="cursor-pointer"
+                data-testid="button-more-info"
+              >
+                <Info className="h-4 w-4 mr-2" />
+                More Info
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={onClearChat}
                 className="text-destructive focus:text-destructive cursor-pointer"
