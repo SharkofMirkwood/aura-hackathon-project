@@ -35,11 +35,20 @@ export async function fetchStrategies(addresses: string[]): Promise<any> {
           `[Aura API] Response received for ${address} in ${duration}ms`
         );
 
-        const rawData = Array.isArray(response.data)
-          ? response.data[0]
-          : response.data;
+        // Ensure portfolio tokens are limited to 10 per portfolio item, to avoid LLM context size limits
+        const limitedData = {
+          ...response.data,
+          portfolio: response.data.portfolio.map((item: any) => {
+            if (!item || typeof item !== "object") return item;
+            const tokens = item.tokens;
+            if (Array.isArray(tokens)) {
+              return { ...item, tokens: tokens.slice(0, 10) };
+            }
+            return item;
+          }),
+        };
 
-        return rawData;
+        return limitedData;
       })
     );
 
