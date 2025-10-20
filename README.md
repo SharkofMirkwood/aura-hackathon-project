@@ -48,7 +48,7 @@ This is a stateless application that proxies requests from the frontend to the t
 └──────────────────────┘     └────────────────────┘     └───────────────────────────────────┘
 ```
 
-## 🔧 How LLM Tool Calling Works
+## LLM tool calling with x402 payments
 
 (for context on function/tool calling see: https://platform.openai.com/docs/guides/function-calling )
 
