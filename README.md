@@ -6,9 +6,7 @@ HeyAura is a demonstration application showcasing the power of the AURA API and 
 
 > This is not an official AURA project nor is it endorsed by the AdEx or AURA team.
 
-
-### Chat UI
-
+Screenshots:
 
 | <img src="docs/chat.png" alt="Chat UI Screenshot" width="auto"/>
 |-
