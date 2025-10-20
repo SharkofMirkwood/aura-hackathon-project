@@ -6,6 +6,25 @@ HeyAura is a demonstration application showcasing the power of the AURA API and 
 
 > This is not an official AURA project nor is it endorsed by the AdEx or AURA team.
 
+
+### Chat UI
+
+
+| <img src="docs/chat-ui.png" alt="Chat UI Screenshot" width="auto"/>
+|-
+
+| <img src="docs/payments-popup.png" alt="Payments Popup Screenshot" width="350"/>
+|-
+
+| <img src="docs/wallet-select.png" alt="Wallet Select Screenshot" width="350"/>
+|-
+
+| <img src="docs/architecture-diagram.png" alt="Architecture Diagram" width="450"/>
+|-
+
+
+
+
 ## Architecture Overview
 
 HeyAura is built as a full-stack application with a React frontend and an Express.js backend
