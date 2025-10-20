@@ -69,7 +69,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
             >
-              View the hackathon project code
+              View project on GitHub
               <ExternalLink className="w-4 h-4" />
             </a>
           </div>
@@ -161,11 +161,6 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
         </div>
 
         <div className="p-6 border-t border-border">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-xs text-muted-foreground">
-              Built with ❤️ for the hackathon
-            </p>
-          </div>
           <Button
             onClick={onClose}
             className="w-full"
