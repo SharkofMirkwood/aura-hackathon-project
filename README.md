@@ -46,20 +46,21 @@ The system uses a proxy pattern where:
 - The **frontend** intercepts 402 payment responses and handles payment using the user's crypto wallet, then resubmits the requests to the backend
 - The **backend** receives the request with the payment header, verifies the payment, then retrieves the data from the external API and returns it to the frontend, which appends the tool call to the chat history for the rest of the conversation with the LLM
 
+This disagram illustrates the flow when the user interacts with the chat and the chat decides it should call get_strategies to get the AURA strategies:
 
 ```mermaid
 sequenceDiagram
     participant User
+    participant Wallet
     participant Frontend
     participant Backend
     participant OpenAI
     participant AURA API
-    participant Wallet
 
     User->>Frontend: Input chat message
     Frontend->>Backend: Send message
-    Backend->>OpenAI: Send message with tool definitions (ie. [get_strategies])
-    OpenAI->>Backend: Return tool call (e.g. get_strategies)
+    Backend->>OpenAI: Send message with tool definitions
+    OpenAI->>Backend: Return tool call for get_strategies
     Backend->>Frontend: Return tool call to frontend
     Frontend->>Backend: Call /aura-strategies as part of tool call
     Backend->>Frontend: Return 402 error (payment required)
@@ -85,11 +86,11 @@ sequenceDiagram
 
 These are the env vars you need to provide regardless of how you run the application. The only one that requires payment is OPENAI_API_KEY, which charges for the LLM usage.
 
-**OPENAI_API_KEY** : OpenAI API key, with permission to create chat completions. See https://platform.openai.com/api-keys
-**CDP_API_KEY_ID** : API key for Coinbase CDP, for verifying the x402 payments on Base. Get your key and secret for free from https://portal.cdp.coinbase.com/
-**CDP_API_KEY_SECRET** : See CDP_API_KEY_ID
-**PAYTO_ADDRESS** : EVM address that will receive the x402 payments
-**AURA_API_KEY** (Optional) : API key for AURA API. WIthout this, rate limits are quite strict but the application will still work
+- **OPENAI_API_KEY** : OpenAI API key, with permission to create chat completions. See https://platform.openai.com/api-keys
+- **CDP_API_KEY_ID** : API key for Coinbase CDP, for verifying the x402 payments on Base. Get your key and secret for free from https://portal.cdp.coinbase.com/
+- **CDP_API_KEY_SECRET** : See CDP_API_KEY_ID
+- **PAYTO_ADDRESS** : EVM address that will receive the x402 payments
+- **AURA_API_KEY** (Optional) : API key for AURA API. WIthout this, rate limits are quite strict but the application will still work
 
 
 ### Recommended: Run with Docker Compose (dev)

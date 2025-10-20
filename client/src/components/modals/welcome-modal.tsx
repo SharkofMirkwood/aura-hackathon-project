@@ -44,7 +44,8 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               This is a hackathon application built for demonstration purposes.
               It is not production-ready and should be used with caution. We do
               not accept liability for any financial decisions made based on
-              this application.
+              this application. HeyAura is not affiliated with or endorsed by
+              the AdEx or AURA team.
             </p>
           </div>
 

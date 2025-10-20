@@ -26,7 +26,7 @@ export async function fetchStrategies(addresses: string[]): Promise<any> {
             headers: {
               "Content-Type": "application/json",
             },
-            timeout: 30000,
+            timeout: 60000,
           }
         );
 

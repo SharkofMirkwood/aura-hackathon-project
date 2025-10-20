@@ -43,8 +43,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         functionCall: msg.functionCall || null,
       }));
 
+      // Filter out assistant tool calls that don't have a corresponding tool response (it usually means the tool call errored, and will prevent the LLM from continuing)
+      const filterUnansweredToolCalls = (msgs: Message[]): Message[] => {
+        const respondedKeys = new Set<string>();
+
+        for (const m of msgs) {
+          if (m.role === "tool" && m.functionCall) {
+            const key = m.functionCall.id
+              ? `id:${m.functionCall.id}`
+              : `name:${m.functionCall.name}`;
+            respondedKeys.add(key);
+          }
+        }
+
+        return msgs.filter((m) => {
+          if (m.role === "assistant" && m.functionCall) {
+            const idKey = m.functionCall.id ? `id:${m.functionCall.id}` : null;
+            const nameKey = `name:${m.functionCall.name}`;
+            return (
+              (idKey && respondedKeys.has(idKey)) || respondedKeys.has(nameKey)
+            );
+          }
+          return true;
+        });
+      };
+
+      const filteredMessages = filterUnansweredToolCalls(messages);
+
       const chatResponse = await createChatCompletion(
-        messages,
+        filteredMessages,
         selectedWallets,
         false
       );

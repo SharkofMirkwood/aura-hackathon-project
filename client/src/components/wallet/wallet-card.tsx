@@ -135,8 +135,9 @@ export default function WalletCard({
               </span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Top up this wallet with USDC on Base to enable automatic payments
-              for AI queries. Payments will be deducted seamlessly when needed.
+              COMING SOON: Top up this wallet with USDC on Base to enable
+              automatic payments for AI queries. Payments will be deducted
+              seamlessly when needed.
             </p>
           </div>
         ) : (
