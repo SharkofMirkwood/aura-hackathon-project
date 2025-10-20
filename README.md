@@ -150,8 +150,9 @@ I limited the scope of the project for the sake of completion before the hackath
 
 - **Built-in wallet auto-pay with top-ups**: I started on this by having the app generate a built-in wallet (it has the private key stored in localstorage), but it would be nice to flesh out the built-in wallet to support topping it up easily + automatically taking micropayments from this wallet without user prompts. For the sake of transparency in the demo, prompting the user for payment is actually quite useful, but in real life use this creates some friction so being able to use a "hot wallet" with topups, spending limits etc. could enable frictionless auto-payments while allowing the user to control their wallet fully.
 - **Charge x402 for LLM requests**: In addition to charging for AURA data fetches, meter and charge chat completion/tool-call tokens using x402. This would allow the app to cover the costs of using the LLM, and in general might be a good use case for x402 with any LLM-enabled application.
-- **MCP (Model Context Protocol) server support**: Add some MCP endpoints (or potentially even allow users to provide them, with some protections on top) that the LLM could call alongside AURA, expanding the tool universe while keeping the same x402 paywall and wallet flow.
+- **MCP server support/additional functionality**: Add some MCP endpoints (or potentially even allow users to provide them, with some protections on top) that the LLM could call alongside AURA, making the chat more useful. This demo focuses on the AURA + x402 functionality, but it could provide more useful commentary on top.
 - **Streaming messages**: Minor, but would be nice to stream the LLM responses instead of waiting for the full response before rendering. It may make the server proxy a bit more complex but would improve UX/perceived response times.
+
 
 These would be required before going to production:
 
