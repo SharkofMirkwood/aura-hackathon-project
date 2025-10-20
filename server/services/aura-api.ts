@@ -42,7 +42,11 @@ export async function fetchStrategies(addresses: string[]): Promise<any> {
             if (!item || typeof item !== "object") return item;
             const tokens = item.tokens;
             if (Array.isArray(tokens)) {
-              return { ...item, tokens: tokens.slice(0, 10) };
+              const sortedTokens = [...tokens].sort(
+                (a, b) =>
+                  (b.balanceUSD ?? -Infinity) - (a.balanceUSD ?? -Infinity)
+              );
+              return { ...item, tokens: sortedTokens.slice(0, 10) };
             }
             return item;
           }),
