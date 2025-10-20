@@ -10,16 +10,16 @@ HeyAura is a demonstration application showcasing the power of the AURA API and 
 ### Chat UI
 
 
-| <img src="docs/chat-ui.png" alt="Chat UI Screenshot" width="auto"/>
+| <img src="docs/chat.png" alt="Chat UI Screenshot" width="auto"/>
 |-
 
-| <img src="docs/payments-popup.png" alt="Payments Popup Screenshot" width="350"/>
+| <img src="docs/prompt.png" alt="Prompting for payment" width="350"/>
 |-
 
-| <img src="docs/wallet-select.png" alt="Wallet Select Screenshot" width="350"/>
+| <img src="docs/rabby-txn.png" alt="Transaction being made in Rabby wallet" width="350"/>
 |-
 
-| <img src="docs/architecture-diagram.png" alt="Architecture Diagram" width="450"/>
+| <img src="docs/strategies.png" alt="Strategies returned from AURA API" width="450"/>
 |-
 
 
