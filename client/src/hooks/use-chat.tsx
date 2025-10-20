@@ -209,6 +209,17 @@ export function useChat() {
 
         throw new Error(`Unknown function: ${functionCall.name}`);
       } catch (walletError: any) {
+        // Check for 402 payment errors with empty error objects (this happens when Coinbase returns 500 or 502 in the internal library)
+        if (
+          walletError.response?.status === 402 &&
+          walletError.response?.data?.error &&
+          Object.keys(walletError.response.data.error).length === 0
+        ) {
+          throw new Error(
+            "Coinbase payment facilitator not responding. Please try again later."
+          );
+        }
+
         if (walletError.message) {
           toast({
             title: "Wallet Connection Failed",
