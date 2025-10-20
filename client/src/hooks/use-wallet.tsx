@@ -50,6 +50,74 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   const { toast } = useToast();
 
+  // Constants for USDC on Base and ERC-20 balanceOf selector
+  const USDC_CONTRACT_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+  const BALANCE_OF_SELECTOR = "0x70a08231"; // balanceOf(address)
+
+  // Helper: fetch USDC balance (in whole USDC) for an address on Base
+  const fetchUsdcBalanceOnBase = useCallback(async (address: string) => {
+    if (!window.ethereum) return 0;
+    try {
+      const addressParam = address.slice(2).toLowerCase().padStart(64, "0");
+      const usdcBalance = await window.ethereum.request({
+        method: "eth_call",
+        params: [
+          {
+            to: USDC_CONTRACT_BASE,
+            data: `${BALANCE_OF_SELECTOR}${addressParam}`,
+          },
+          "latest",
+        ],
+      });
+      if (usdcBalance && usdcBalance !== "0x") {
+        const balanceInUSDC = parseInt(usdcBalance, 16) / Math.pow(10, 6);
+        return balanceInUSDC;
+      }
+    } catch (err) {
+      console.error("Failed to fetch USDC balance:", err);
+    }
+    return 0;
+  }, []);
+
+  // Helper: upsert/update the connected wallet and selection state
+  const upsertConnectedWallet = useCallback(
+    (address: string, balanceUSDC: number) => {
+      const connectedWallet: Wallet = {
+        id: `connected_${address}`,
+        name: "Connected Wallet",
+        address,
+        balance: balanceUSDC.toFixed(2),
+        isConnected: true,
+        isBuiltIn: false,
+      };
+
+      setIsConnected(true);
+      setConnectedAddress(address);
+
+      setWallets((prev) => {
+        const exists = prev.find(
+          (w) => w.address.toLowerCase() === address.toLowerCase()
+        );
+        if (exists) {
+          return prev.map((w) =>
+            w.address.toLowerCase() === address.toLowerCase()
+              ? { ...w, isConnected: true, balance: balanceUSDC.toFixed(2) }
+              : { ...w, isConnected: false }
+          );
+        }
+        return [
+          connectedWallet,
+          ...prev.map((w) => ({ ...w, isConnected: false })),
+        ];
+      });
+
+      setSelectedWallets((prev) =>
+        prev.includes(connectedWallet.id) ? prev : [connectedWallet.id, ...prev]
+      );
+    },
+    [setWallets, setSelectedWallets]
+  );
+
   // Load wallets from localStorage
   useEffect(() => {
     const savedWallets = localStorage.getItem(WALLETS_STORAGE_KEY);
@@ -108,67 +176,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         .request({ method: "eth_accounts" })
         .then(async (accounts: string[]) => {
           if (accounts.length > 0) {
-            setIsConnected(true);
-            setConnectedAddress(accounts[0]);
-            // Add connected wallet directly
             try {
-              // Fetch USDC balance on Base network
-              const addressParam = accounts[0]
-                .slice(2)
-                .toLowerCase()
-                .padStart(64, "0");
-
-              let balanceUSD = 0;
-              const usdcBalance = await window.ethereum.request({
-                method: "eth_call",
-                params: [
-                  {
-                    to: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-                    data: `0x70a08231${addressParam}`,
-                  },
-                  "latest",
-                ],
-              });
-
-              if (usdcBalance && usdcBalance !== "0x") {
-                const balanceInUSDC =
-                  parseInt(usdcBalance, 16) / Math.pow(10, 6);
-                balanceUSD = balanceInUSDC;
-              }
-
-              const connectedWallet: Wallet = {
-                id: `connected_${accounts[0]}`,
-                name: "Connected Wallet",
-                address: accounts[0],
-                balance: balanceUSD.toFixed(2),
-                isConnected: true,
-                isBuiltIn: false,
-              };
-              setWallets((prev) => {
-                const exists = prev.find(
-                  (w) => w.address.toLowerCase() === accounts[0].toLowerCase()
-                );
-                if (exists) {
-                  return prev.map((w) =>
-                    w.address.toLowerCase() === accounts[0].toLowerCase()
-                      ? {
-                          ...w,
-                          isConnected: true,
-                          balance: balanceUSD.toFixed(2),
-                        }
-                      : { ...w, isConnected: false }
-                  );
-                }
-                return [
-                  connectedWallet,
-                  ...prev.map((w) => ({ ...w, isConnected: false })),
-                ];
-              });
-              setSelectedWallets((prev) =>
-                prev.includes(connectedWallet.id)
-                  ? prev
-                  : [connectedWallet.id, ...prev]
-              );
+              const balanceUSDC = await fetchUsdcBalanceOnBase(accounts[0]);
+              upsertConnectedWallet(accounts[0], balanceUSDC);
             } catch (error) {
               console.error("Failed to add connected wallet:", error);
             }
@@ -177,6 +187,38 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         .catch(console.error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Listen for account changes and auto-add/update connected wallet
+  useEffect(() => {
+    if (!window.ethereum) return;
+
+    const handleAccountsChanged = async (accounts: string[]) => {
+      try {
+        if (!accounts || accounts.length === 0) {
+          setIsConnected(false);
+          setConnectedAddress(null);
+          setWallets((prev) => prev.map((w) => ({ ...w, isConnected: false })));
+          return;
+        }
+
+        const address = accounts[0];
+        const balanceUSDC = await fetchUsdcBalanceOnBase(address);
+        upsertConnectedWallet(address, balanceUSDC);
+      } catch (error) {
+        console.error("accountsChanged handling failed:", error);
+      }
+    };
+
+    window.ethereum.on("accountsChanged", handleAccountsChanged);
+    return () => {
+      try {
+        window.ethereum?.removeListener(
+          "accountsChanged",
+          handleAccountsChanged
+        );
+      } catch (_) {}
+    };
   }, []);
 
   const connectWallet = useCallback(async () => {
@@ -196,65 +238,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       });
 
       if (accounts.length > 0) {
-        setIsConnected(true);
-        setConnectedAddress(accounts[0]);
-
-        // Add connected wallet
         try {
-          // Fetch USDC balance on Base network
-          const addressParam = accounts[0]
-            .slice(2)
-            .toLowerCase()
-            .padStart(64, "0");
-
-          let balanceUSD = 0;
-          const usdcBalance = await window.ethereum.request({
-            method: "eth_call",
-            params: [
-              {
-                to: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-                data: `0x70a08231${addressParam}`,
-              },
-              "latest",
-            ],
-          });
-
-          console.log("usdcBalance", usdcBalance);
-
-          if (usdcBalance && usdcBalance !== "0x") {
-            const balanceInUSDC = parseInt(usdcBalance, 16) / Math.pow(10, 6);
-            balanceUSD = balanceInUSDC;
-          }
-
-          const connectedWallet: Wallet = {
-            id: `connected_${accounts[0]}`,
-            name: "Connected Wallet",
-            address: accounts[0],
-            balance: balanceUSD.toFixed(2),
-            isConnected: true,
-            isBuiltIn: false,
-          };
-          setWallets((prev) => {
-            const exists = prev.find(
-              (w) => w.address.toLowerCase() === accounts[0].toLowerCase()
-            );
-            if (exists) {
-              return prev.map((w) =>
-                w.address.toLowerCase() === accounts[0].toLowerCase()
-                  ? { ...w, isConnected: true, balance: balanceUSD.toFixed(2) }
-                  : { ...w, isConnected: false }
-              );
-            }
-            return [
-              connectedWallet,
-              ...prev.map((w) => ({ ...w, isConnected: false })),
-            ];
-          });
-          setSelectedWallets((prev) =>
-            prev.includes(connectedWallet.id)
-              ? prev
-              : [connectedWallet.id, ...prev]
-          );
+          const balanceUSDC = await fetchUsdcBalanceOnBase(accounts[0]);
+          upsertConnectedWallet(accounts[0], balanceUSDC);
         } catch (error) {
           console.error("Failed to add connected wallet:", error);
         }
