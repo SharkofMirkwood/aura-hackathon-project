@@ -130,7 +130,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
         },
       },
-      facilitator
+      // facilitator
+      {
+        // Coinbase started always returning Forbidden errors for some reason, so using this temporarily
+        url: "https://facilitator.mogami.tech",
+      }
     )
   );
 
